@@ -39,3 +39,10 @@
 Debug*/
 Release*/
 bin/
+
+tmp*/
+temp*/
+Temp*/
+
+# Cocos creator export
+FuzzyTower/Classes/reader/

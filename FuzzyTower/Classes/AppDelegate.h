@@ -8,6 +8,13 @@
 
 Private inheritance here hides part of interface from Director.
 */
+
+enum class EAppScene
+{
+	MainMenu = 0,
+	Count
+};
+
 class  AppDelegate : private cocos2d::Application
 {
 public:
@@ -34,6 +41,9 @@ public:
     @param  the pointer of the application
     */
     virtual void applicationWillEnterForeground();
+
+	void PushScene(EAppScene const scene);
+	void PopScene();
 };
 
 #endif // _APP_DELEGATE_H_

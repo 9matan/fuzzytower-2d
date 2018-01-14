@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
+#include "MainMenuScene.h"
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -17,6 +17,13 @@ using namespace CocosDenshion;
 #endif
 
 USING_NS_CC;
+
+namespace
+{
+	EAppScene const START_SCENE = EAppScene::MainMenu;
+
+	unsigned short const CONSOLE_TCP_PORT = 49999;
+} // namespace
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(800, 450);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
@@ -93,11 +100,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
-    // create a scene. it's an autorelease object
-    auto scene = HelloWorld::createScene();
+	auto console = director->getConsole();
+	console->listenOnTCP(CONSOLE_TCP_PORT);
 
-    // run
-    director->runWithScene(scene);
+	PushScene(START_SCENE);
 
     return true;
 }
@@ -124,4 +130,32 @@ void AppDelegate::applicationWillEnterForeground() {
     SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
     SimpleAudioEngine::getInstance()->resumeAllEffects();
 #endif
+}
+
+void AppDelegate::PushScene(EAppScene const nextSceneId)
+{
+	cocos2d::Scene* nextScene = nullptr;
+	auto director = Director::getInstance();
+
+	switch (nextSceneId)
+	{
+	case EAppScene::MainMenu:
+		nextScene = CMainMenuScene::create();
+		break;
+	}
+
+	CCASSERT(nextScene != nullptr, "Scene is not loaded!");
+	if (director->getRunningScene() == nullptr)
+	{
+		director->runWithScene(nextScene);
+	}
+	else
+	{
+		director->pushScene(nextScene);
+	}
+}
+
+void AppDelegate::PopScene()
+{
+	Director::getInstance()->popScene();
 }
